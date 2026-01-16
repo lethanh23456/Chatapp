@@ -29,7 +29,8 @@ redisClient.connect().then(() => console.log('Connected to Redis')).catch((err) 
 
 const app = express();
 
-app.use("api/v1",userRoutes);
+app.use(express.json());
+app.use("/api/v1",userRoutes);
 
 
 const port = process.env.PORT || 5000;

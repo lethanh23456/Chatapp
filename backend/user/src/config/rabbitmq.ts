@@ -1,10 +1,10 @@
-import amqb from 'amqplib'
+import amql from 'amqplib'
 
-let channel: amqb.Channel;
+let channel: amql.Channel;
 
 export const connectRabbitMQ = async() => {
     try {
-        const connection = await amqb.connect({
+        const connection = await amql.connect({
             protocol: 'amqp',
             hostname: 'localhost',
             port: 5672,
@@ -19,7 +19,7 @@ export const connectRabbitMQ = async() => {
     }
 }
 
-export const publishToQueue = async(queueName: string, message: string) => {
+export const publishToQueue = async(queueName: string, message: unknown) => {
     if (!channel) {
         throw new Error('RabbitMQ channel is not initialized. Call connectRabbitMQ first.');
     }
