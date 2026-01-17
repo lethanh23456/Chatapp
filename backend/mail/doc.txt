@@ -5,3 +5,5 @@
  npm i -D @types/jsonwebtoken
  npm i cors
   npm i -D @types/cors
+npm i express dotenv mongoose jsonwebtoken axios 
+npm i -D @types/express @types/dotenv @types/jsonwebtoken @types/axios concurrently

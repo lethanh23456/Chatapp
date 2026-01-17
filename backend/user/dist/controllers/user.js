@@ -64,6 +64,7 @@ export const myProfile = TryCatch(async (req, res) => {
     });
 });
 export const updateName = TryCatch(async (req, res) => {
+    // vì đã gắn req.user = decodedValue.user; trong middleware isAuth nên ở đây có thể dùng req.user để lấy thông tin user đã đăng nhập
     const user = await User.findById(req.user?._id);
     if (!user) {
         res.status(404).json({ message: "User not found." });
