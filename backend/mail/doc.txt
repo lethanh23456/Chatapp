@@ -3,3 +3,5 @@
  npm i -D @types/express @types/dotenv @types/amqplib @types/nodemailer concurrently
   npm install jsonwebtoken
  npm i -D @types/jsonwebtoken
+ npm i cors
+  npm i -D @types/cors
