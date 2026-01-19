@@ -7,3 +7,5 @@
   npm i -D @types/cors
 npm i express dotenv mongoose jsonwebtoken axios 
 npm i -D @types/express @types/dotenv @types/jsonwebtoken @types/axios concurrently
+npm i cloudinary multer multer-storage-cloudinary
+npm i -D @types/multer 
