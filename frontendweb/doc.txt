@@ -1,0 +1,3 @@
+npm i js-cookie
+npm i lucide-react @types/js-cookie axios
+npm i react-hot-toast
