@@ -17,15 +17,38 @@ if (!process.env.REDIS_URL) {
   throw new Error('REDIS_URL is not defined');
 }
 
+
 export const redisClient = createClient({
-    url: process.env.REDIS_URL,
+  url: process.env.REDIS_URL,
+  socket: {
+    reconnectStrategy: (retries) => {
+      console.log("Redis reconnect attempt:", retries);
+      return Math.min(retries * 100, 3000);
+    },
+  },
 });
 
-redisClient.connect().then(() => console.log('Connected to Redis')).catch((err) => {
-    console.error('Failed to connect to Redis', err);
-    process.exit(1);
+redisClient.on("connect", () => {
+  console.log("Redis connecting...");
 });
 
+redisClient.on("ready", () => {
+  console.log("Connected to Redis");
+});
+
+redisClient.on("reconnecting", () => {
+  console.log("Redis reconnecting...");
+});
+
+redisClient.on("end", () => {
+  console.warn("Redis connection closed");
+});
+
+redisClient.on("error", (err) => {
+  console.error("Redis error (handled):", err.message);
+});
+
+await redisClient.connect();
 
 
 const app = express();

@@ -1,12 +1,17 @@
 "use client"
+import Loading from "@/components/Loading";
+import { useAppData } from "@/context/AppContext";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React, { use, useReducer, useState } from "react";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
     const[email,setEmail] = useState<string>("");
     const [loading , setLoading] = useState<boolean>(false);
     const router = useRouter();
+
+    const {isAuth , loading : userLoading} = useAppData()
 
     const handleSubmit = async (
         e: React.FormEvent<HTMLElement>
@@ -18,12 +23,14 @@ const LoginPage = () => {
                 email,
             })
 
-            alert(data.message)
+            toast.success(data.message)
             router.push(`/verify?email=${email}`)
         } catch (error : any){
-            alert(error.response.data.message)
+            toast.error(error.response.data.message)
         }
     }
+    if(userLoading) return <Loading/>
+    if(isAuth) redirect("/chat");
   return (
     <div>
         <div>welcome to chatapp</div>
