@@ -6,9 +6,12 @@ import React, { useState, useRef, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useAppData } from "@/context/AppContext";
 import Loading from "./Loading";
+import toast from "react-hot-toast";
 
 const VerifyOtp = () => {
-  const {isAuth , setIsAuth , setUser , loading : userLoading} = useAppData()
+  const {isAuth , setIsAuth , setUser , loading : userLoading , fetchChats ,
+    fetchUsers
+  } = useAppData()
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(5);
   const [loading, setLoading] = useState(false);
@@ -50,11 +53,14 @@ const VerifyOtp = () => {
         "http://localhost:5000/api/v1/verify",
         { email, otp: code }
       );
+      toast.success(data.message);
       Cookies.set("token", data.token, { expires: 15, path: "/" });
       setOtp(["", "", "", "", "", ""])
       inputRefs.current[0]?.focus();
       setUser(data.user);
       setIsAuth(true);
+      fetchChats();
+      fetchUsers();
     } catch {
       alert("OTP sai");
     } finally {

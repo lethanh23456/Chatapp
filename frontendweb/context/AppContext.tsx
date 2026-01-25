@@ -37,8 +37,14 @@ interface AppContextType{
     user : User | null;
     loading : boolean;
     isAuth : boolean;
-    setUser : React.Dispatch<React.SetStateAction<User |null>>
-    setIsAuth : React.Dispatch<React.SetStateAction<boolean>>
+    setUser : React.Dispatch<React.SetStateAction<User |null>>;
+    setIsAuth : React.Dispatch<React.SetStateAction<boolean>>;
+    logoutUser : () => Promise<void>;
+    fetchUsers : () => Promise<void>;
+    fetchChats : () => Promise<void>;
+    chats : Chats[] | null;
+    users : User[] | null ;
+    setChats : React.Dispatch<React.SetStateAction<Chats[] |null>>;
 
 }
 
@@ -78,7 +84,7 @@ export const AppProvider : React.FC<AppProviderProps> = ({children}) => {
         toast.success("User logged out");
     }
 
-    const [chats , setChats] = useState<Chat[] | null > (null)
+    const [chats , setChats] = useState<Chats[] | null > (null)
 
     async function fetchChats() {
         const token = Cookies.get("token")
@@ -94,17 +100,52 @@ export const AppProvider : React.FC<AppProviderProps> = ({children}) => {
         }
     }
 
+    const [users , setUsers] = useState<User[] | null>(null)
 
+     async function fetchUsers () {
+        try {
+            const token = Cookies.get("token")
+
+            const { data } = await axios.get(`${user_service}/api/v1/user/all`, {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            if (Array.isArray(data)) {
+                setUsers(data);
+            } else if (data && Array.isArray(data.users)) {
+                setUsers(data.users);
+            } else {
+                console.error("API không trả về mảng người dùng:", data);
+                setUsers([]); 
+            }
+        } catch (error){
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         fetchUser();
         fetchChats();
+        fetchUsers();
     },[]);
 
 
 
     return (
-        <AppContext.Provider value={{user , setUser , isAuth , setIsAuth , loading}}>
+        <AppContext.Provider value={{
+            user , 
+            setUser , 
+            isAuth , 
+            setIsAuth , 
+            loading,
+            logoutUser , 
+            fetchChats,
+            fetchUsers,
+            chats,
+            users,
+            setChats,
+        }}>
             {children}
             <Toaster/>
         </AppContext.Provider>
